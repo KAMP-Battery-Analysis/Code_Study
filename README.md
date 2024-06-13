@@ -19,3 +19,6 @@
 | Week 3 <br/> (24.06.11. 화)    | KAMP AI 코드 분석 - 2주차 <br/> (MTadGAN, 코드리뷰)    | [MTadGAN, AI 모델 학습 코드리뷰(59~79 Page) by 박준영](https://github.com/KAMP-Battery-Analysis/Code_Study/blob/main/Week_3/240611_JYPJUN.ipynb) |
 | Week 3 <br/> (24.06.13. 목)    | KAMP AI 코드 분석 - 2주차 <br/> (테스트 데이터 계산 코드 리뷰)    | [MTadGAN, 코드리뷰(80~84 Page) by 박준영](https://github.com/KAMP-Battery-Analysis/Code_Study/blob/main/Week_3/240611_JYPJUN.ipynb) |
 | Week 4 <br/> (24.06.13. 화)    | KAMP AI 코드 분석 - 3주차 <br/> (Anormalies 10번, 17번 코드 리뷰)    | - |
+
+
+test
