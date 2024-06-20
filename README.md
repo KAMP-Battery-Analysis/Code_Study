@@ -4,7 +4,7 @@
 
 |    ![복현우](https://avatars.githubusercontent.com/u/127809940?v=4)    |    ![박준영](https://avatars.githubusercontent.com/u/156387559)    |
 | :---: | :---: |
-|    **복현우** <br/> GitHub [@Bok-hyeonu](https://github.com/bhw0930) <br/> Baekjoon [@bhw0930](https://www.acmicpc.net/user/bhw0930) <br/> solved.ac [@bhw0930](https://solved.ac/profile/bhw0930)    |    🐼 **박준영** 🐼 <br/> GitHub [@JYPJUN](https://gitshub.com/JYPJUN) <br/> Baekjoon [@psw9502](https://www.acmicpc.net/user/psw9502) <br/> solved.ac [@psw9502](https://solved.ac/profile/psw9502)    |
+|    **복현우** <br/> GitHub [@Bok-hyeonu](https://github.com/Bok-hyeonu) <br/> Baekjoon [@bhw0930](https://www.acmicpc.net/user/bhw0930) <br/> solved.ac [@bhw0930](https://solved.ac/profile/bhw0930)    |    🐼 **박준영** 🐼 <br/> GitHub [@JYPJUN](https://gitshub.com/JYPJUN) <br/> Baekjoon [@psw9502](https://www.acmicpc.net/user/psw9502) <br/> solved.ac [@psw9502](https://solved.ac/profile/psw9502)    |
 
 #### 스터디 자료는 KAMP 인공지능 제조 플랫폼의 자료를 참고하고 있습니다.
 - 제조 AI 데이터셋
