@@ -465,12 +465,12 @@ class Anomaly(object):
         window_end = 0  # 윈도우 종료점 초기화
         sequences = list()  # 이상치 시퀀스를 저장할 리스트 초기화
         
-        # 오류 배열을 순회하며 윈도우을 이동시키는 루프
+        # 오류 배열을 순회하며 윈도우를 이동시키는 루프
         while window_end < len(errors):
             window_end = window_start + window_size  # 윈도우 종료점 설정
             window = errors[window_start:window_end]  # 현재 윈도우에 해당하는 오류 값들을 선택
             
-            # 현재 윈도우에서 이상치 시퀀스를 찾음
+            # 현재 윈도우에서 이상치 시퀀스를 찾음(#9번 참고)
             window_sequences = self._find_window_sequences(window,
                                                         z_range,
                                                         anomaly_padding,
@@ -759,7 +759,7 @@ class Anomaly(object):
     def score_anomalies(self, y, y_hat, critic, index, score_window=10, critic_smooth_window=None, 
                     error_smooth_window=None, smooth=True, rec_error_type="point", comb="mult", lambda_rec=0.5):
         """anomaly score 배열을 계산.
-        anomaly score는 재구성 오류와 critic 점수를 합하여 계산
+        anomaly score는 재현 오류와 critic 점수를 합하여 계산
         Args:
         y (ndarray): 실제 값 Ground truth.
         y_hat (ndarray): 예측 값. 각 시간마다 여러 예측 값을 가짐
