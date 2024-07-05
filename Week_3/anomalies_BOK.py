@@ -8,23 +8,34 @@ class Anomaly(object):
     
     # _count_above(2)에서 사용
     def _deltas(self, errors, epsilon, mean, std):
-        """평균 및 표준편차 델타를 계산.
+        """
+        평균 및 표준편차 델타를 계산.
         delta_mean = mean(errors) - epsilon(임계값) 이하의 모든 오류들의 평균
         delta_std = std(errors) - epsilon(임계값) 이하의 모든 오류들의 표준편차
+
         Args:
-        errors (ndarray): 오류 배열.
-        epsilon (ndarray): 임계값.
-        mean (float): 오류들의 평균.
-        std (float): 오류들의 표준편차.
+        errors (ndarray): 오류 배열. 각 요소는 특정 시간에 발생한 오류 값을 나타냄.
+        epsilon (float): 임계값. 이 값 이하의 오류들만을 고려하여 델타를 계산함.
+        mean (float): 전체 오류들의 평균 값.
+        std (float): 전체 오류들의 표준편차 값.
+
         Returns:
         float, float:
-        * delta_mean.
-        * delta_std.
+        * delta_mean: mean에서 epsilon 이하의 오류들의 평균을 뺀 값.
+        * delta_std: std에서 epsilon 이하의 오류들의 표준편차를 뺀 값.
         """
+        # 오류 배열에서 epsilon 이하의 값들만 추출.
         below = errors[errors <= epsilon]
+        
+        # epsilon 이하의 오류가 없을 경우 0, 0을 반환.
         if not len(below):
             return 0, 0
+        
+        # delta_mean: 전체 오류 평균에서 epsilon 이하 오류들의 평균을 뺀 값.
+        # delta_std: 전체 오류 표준편차에서 epsilon 이하 오류들의 표준편차를 뺀 값.
         return mean - below.mean(), std - below.std()
+
+    
     # anomalies.py (2) - _z_cost(3)에서 사용
     def _count_above(self, errors, epsilon):
         """epsilon 이상인 오류와 연속된 시퀀스의 수를 계산
@@ -38,11 +49,11 @@ class Anomaly(object):
         * epsilon 이상인 오류의 수.
         * epsilon 이상인 연속된 시퀀스의 수.
         """
-        # errors 배열에서 epsilon보다 큰 값인지 여부 배열
+        # errors 배열에서 epsilon보다 큰 값인지 여부 (True/False) 배열
         above = errors > epsilon
         # epsilon보다 큰 오류의 총 수를 계산
         total_above = len(errors[above])
-        # above 배열을 pandas Series로 변환
+        # above 배열을 pandas Series 데이터 타입으로 변환
         above = pd.Series(above)
         # above Series를 1만큼 시프트(레코드를 한 칸씩 밈)
         shift = above.shift(1)
@@ -77,7 +88,7 @@ class Anomaly(object):
         epsilon = mean + z * std
         # epsilon을 사용하여 평균 및 표준편차 델타를 계산
         delta_mean, delta_std = self._deltas(errors, epsilon, mean, std)
-        # epsilon보다 큰 오류와 연속된 시퀀스의 수를 계산
+        # epsilon보다 큰 오류의 개수와 해당 시퀀스의 수를 계산
         above, consecutive = self._count_above(errors, epsilon)
         # 분자(numerator)를 계산합니다. (반전된 값)
         numerator = -(delta_mean / mean + delta_std / std)
@@ -209,41 +220,45 @@ class Anomaly(object):
 
     # anomalies.py (5-2) - _find_window_sequences(9)에서 사용
     def _get_max_errors(self, errors, sequences, max_below):
-        """각 이상 시퀀스의 최대 오류를 가져옴.
+        """
+        각 이상 시퀀스의 최대 오류를 가져옴.
         또한 이상으로 간주되지 않은 최대 오류 값을 포함하는 행을 추가.
         각 시퀀스의 최대 오류를 포함하는 ``max_error`` 열과 시작 및 종료 인덱스를
         포함하는 ``start`` 및 ``stop`` 열이 있는 테이블을 내림차순으로 정렬하여 반환.
 
         Args:
-        errors (ndarray): 오류 배열.
-        sequences (ndarray): 이상 시퀀스의 시작과 끝을 포함하는 배열.
+        errors (ndarray): 오류 배열. 각 요소는 특정 시간에 발생한 오류 값을 나타냄.
+        sequences (ndarray): 이상 시퀀스의 시작과 끝 인덱스를 포함하는 2차원 배열.
         max_below (float): 이상으로 간주되지 않은 최대 오류 값.
 
         Returns:
         pandas.DataFrame: ``start``, ``stop``, ``max_error`` 열을 포함하는 DataFrame 객체.
+                        ``start``와 ``stop``은 각 시퀀스의 시작과 끝 인덱스,
+                        ``max_error``는 해당 시퀀스 내의 최대 오류 값.
         """
-        # 이상으로 간주되지 않은 최대 오류 값을 포함하는 초기 값 설정.
+        # max_errors 리스트를 초기화하고, 이상으로 간주되지 않은 최대 오류 값을 첫 번째 항목으로 추가.
         max_errors = [{
             'max_error': max_below,
             'start': -1,
             'stop': -1
         }]
 
-        # 각 시퀀스에 대해 최대 오류 값을 계산하고 추가.
+        # 각 시퀀스를 순회하며 최대 오류 값을 계산하고 max_errors 리스트에 추가.
         for sequence in sequences:
-            start, stop = sequence
-            sequence_errors = errors[start: stop + 1]
+            start, stop = sequence  # 시퀀스의 시작과 끝 인덱스
+            sequence_errors = errors[start: stop + 1]  # 해당 시퀀스의 오류 값들
             max_errors.append({
-                'start': start,
-                'stop': stop,
-                'max_error': max(sequence_errors)
+                'start': start,  # 시퀀스의 시작 인덱스
+                'stop': stop,    # 시퀀스의 끝 인덱스
+                'max_error': max(sequence_errors)  # 시퀀스 내의 최대 오류 값
             })
 
-        # DataFrame으로 변환하고 최대 오류 값으로 내림차순 정렬.
+        # max_errors 리스트를 DataFrame으로 변환하고, 'max_error' 열을 기준으로 내림차순 정렬.
         max_errors = pd.DataFrame(max_errors).sort_values('max_error', ascending=False)
 
-        # 인덱스를 재설정하여 반환.
+        # 정렬된 DataFrame의 인덱스를 재설정하여 반환.
         return max_errors.reset_index(drop=True)
+
     
     # anomalies.py (6) - _find_window_sequences(9)에서 사용
     def _prune_anomalies(self, max_errors, min_percent):
@@ -288,21 +303,22 @@ class Anomaly(object):
     
     # anomalies.py (7) - _find_window_sequences(9)에서 사용
     def _compute_scores(self, pruned_anomalies, errors, threshold, window_start):
-        """이상의 점수를 계산.
-        시퀀스에서 최대 오류에 비례하는 점수를 계산하고, 인덱스를 절대값으로 만들기 위해 window_start 타임스탬프를 추가.
+        """이상치 점수를 계산.
+        시퀀스에서 최대 오차에 비례하는 점수를 계산하고, 인덱스를 절대값으로 만들기 위해 window_start 타임스탬프를 추가.
 
         Args:
         pruned_anomalies (ndarray): 윈도우 내 모든 이상의 시작, 끝 및 max_error를 포함하는 이상 배열.
-        errors (ndarray): 오류 배열.
+        errors (ndarray): 오차 배열.
         threshold (float): 임계값.
-        window_start (int): 윈도우에서 첫 번째 오류 값의 인덱스.
+        window_start (int): 윈도우에서 첫 번째 오차 값의 인덱스.
 
         Returns:
         list: 각 이상에 대해 시작 인덱스, 종료 인덱스, 점수를 포함하는 이상 목록.
         """
+        # 이상 배열 선언
         anomalies = list()
 
-        # 점수 계산을 위한 분모. 오류의 평균과 표준편차의 합.
+        # 점수 계산을 위한 분모부. 오차의 평균과 표준편차의 합으로 계산.
         denominator = errors.mean() + errors.std()
 
         # 가지치기된 각 이상에 대해 점수를 계산.
@@ -315,7 +331,7 @@ class Anomaly(object):
             # 절대 인덱스를 사용하여 이상을 추가.
             anomalies.append([row[0] + window_start, row[1] + window_start, score])
 
-        # 이상 목록을 반환.
+        # 계산된 점수가 포함된 이상 목록을 반환.
         return anomalies
     
     # anomalies.py (8) - find_anomalies(10)에서 사용
@@ -337,35 +353,37 @@ class Anomaly(object):
         if len(sequences) == 0:
             return np.array([])
         
-        # 시퀀스를 시작 인덱스를 기준으로 정렬
+        # 시퀀스를 시작 인덱스만을 기준으로 정렬
+        # 매개변수를 설정하지 않는 경우 시작 인덱스가 같으면 다음 원소를 비교
+        # 매개변수를 설정한 경우 시작 인덱스가 같으면 기존에 정렬된 순서대로 정렬
         sorted_sequences = sorted(sequences, key=lambda entry: entry[0])
         
         # 병합된 새로운 시퀀스 초기화
-        new_sequences = [sorted_sequences[0]]
-        score = [sorted_sequences[0][2]]  # 초기 시퀀스의 점수
-        weights = [sorted_sequences[0][1] - sorted_sequences[0][0]]  # 초기 시퀀스의 길이
+        new_sequences = [sorted_sequences[0]] 
+        score = [sorted_sequences[0][2]]  # 첫 시퀀스의 점수
+        weights = [sorted_sequences[0][1] - sorted_sequences[0][0]]  # 첫 시퀀스의 길이(가중치)
         
         # 정렬된 시퀀스를 순회하면서 병합
         for sequence in sorted_sequences[1:]:
-            prev_sequence = new_sequences[-1]  # 마지막으로 추가된 시퀀스
+            prev_sequence = new_sequences[-1]  # prev_sequence는 마지막으로(바로 이전에) 병합 혹은 추가된 시퀀스
             
-            # 현재 시퀀스가 이전 시퀀스와 겹치거나 연속적인 경우
+            # 현재 순회하는 시퀀스의 시작 인덱스가 prev_sequence의 종료 인덱스와 겹치거나 바로 연속적인 경우
             if sequence[0] <= prev_sequence[1] + 1:
-                score.append(sequence[2])  # 현재 시퀀스의 점수를 추가
-                weights.append(sequence[1] - sequence[0])  # 현재 시퀀스의 길이를 추가
-                # 가중 평균 계산
+                score.append(sequence[2])                   # 현재 시퀀스의 점수를 추가
+                weights.append(sequence[1] - sequence[0])   # 현재 시퀀스의 길이(가중치)를 추가
+                # 점수 가중 평균 계산(가중치는 각 시퀀스의 길이만큼 줌)
                 weighted_average = np.average(score, weights=weights)
                 # 이전 시퀀스와 병합
-                new_sequences[-1] = (prev_sequence[0],
-                                    max(prev_sequence[1], sequence[1]),
-                                    weighted_average)
+                new_sequences[-1] = (prev_sequence[0],                      # 시작 인덱스는 이전 시퀀스의 시작 인덱스
+                                    max(prev_sequence[1], sequence[1]),     # 종료 인덱스는 두 시퀀스 중 최댓값
+                                    weighted_average)                       # 점수는 가중평균을 주어 계산한 값
             else:
                 # 현재 시퀀스가 이전 시퀀스와 겹치지 않으면 새로운 시퀀스로 추가
-                score = [sequence[2]]  # 현재 시퀀스의 점수 초기화
-                weights = [sequence[1] - sequence[0]]  # 현재 시퀀스의 길이 초기화
-                new_sequences.append(sequence)
+                score = [sequence[2]]                   # 현재 시퀀스의 점수 초기화
+                weights = [sequence[1] - sequence[0]]   # 현재 시퀀스의 길이 초기화
+                new_sequences.append(sequence)          # 새로운 시퀀스에 추가
         
-        return np.array(new_sequences)  # 병합된 시퀀스 배열로 반환
+        return np.array(new_sequences)  # 병합 작업이 완료된 시퀀스를 배열로 반환
     
     # anomalies.py (9) - find_anomalies(10)에서 사용
     def _find_window_sequences(self, window, z_range, anomaly_padding, min_percent, window_start, fixed_threshold):
@@ -375,35 +393,32 @@ class Anomaly(object):
         마지막으로, 이상치의 점수를 계산함.
         Args:
         window (ndarray): 분석 중인 윈도우의 오류 배열.
-        z_range (list):
-        동적 임계값 찾기 함수의 시작점을 선택할 범위를 나타내는 두 값의 리스트.
-        anomaly_padding (int):
-        발견된 이상치 전후의 오류 수를 이상치 시퀀스에 추가.
-        min_percent (float):
-        윈도우 시퀀스의 가장 높은 비이상치 오류와 이상치 간의 분리 비율.
+        z_range (list): 동적 임계값 찾기 함수의 시작점을 선택할 범위를 나타내는 두 값의 리스트.
+        anomaly_padding (int): 발견된 이상치 전후의 오류 수를 이상치 시퀀스에 추가.
+        min_percent (float): 윈도우 시퀀스의 가장 높은 비이상치 오류와 이상치 간의 분리 비율.
         window_start (int): 윈도우에서 첫 번째 오류 값의 인덱스.
         fixed_threshold (bool): 고정 임계값을 사용할지 동적 임계값을 사용할지 여부를 나타냄.
         Returns:
-        ndarray:
-        윈도우에서 발견된 각 이상치 시퀀스의 시작 인덱스, 종료 인덱스, 점수를 포함하는 배열.
+        
+        window_sequences (ndarray): 윈도우에서 발견된 각 이상치 시퀀스의 시작 인덱스, 종료 인덱스, 점수를 포함하는 배열.
         """
         
-        # 고정 임계값을 사용할지 여부에 따라 임계값 결정
+        # 고정 임계값을 사용할지 여부에 따라 임계값 결정(기본값 true)
         if fixed_threshold: 
-            threshold = self._fixed_threshold(window)  # 고정 임계값 사용
+            threshold = self._fixed_threshold(window)           # 고정 임계값 사용
         else:
-            threshold = self._find_threshold(window, z_range)  # 동적 임계값 사용
+            threshold = self._find_threshold(window, z_range)   # 동적 임계값 사용
         
-        # 임계값을 기준으로 윈도우에서 이상치 시퀀스와 비이상치 중 최대값을 찾음
+        # 임계값을 기준으로 윈도우에서 이상치 시퀀스(window_sequences)와 비이상치 중 최대값(max_below)을 찾음(#5-1)
         window_sequences, max_below = self._find_sequences(window, threshold, anomaly_padding)
         
-        # 시퀀스에서 최대 오류를 계산
+        # 시퀀스에서 최대 오류를 계산(#5-2)
         max_errors = self._get_max_errors(window, window_sequences, max_below)
         
-        # 이상치 가지치기 (유의미한 이상치만 남김)
+        # 이상치 가지치기 (유의미한 이상치만 남김)(min_percent 기본값 0.1)
         pruned_anomalies = self._prune_anomalies(max_errors, min_percent)
         
-        # 각 이상치 시퀀스의 점수를 계산
+        # 가지치기된 각 이상치 시퀀스의 점수를 계산(점수가 포함된 이상치 시퀀스를 반환받음)
         window_sequences = self._compute_scores(pruned_anomalies, window, threshold, window_start)
         
         return window_sequences  # 이상치 시퀀스를 반환
@@ -525,19 +540,22 @@ class Anomaly(object):
         l_quantile = np.quantile(critics, 0.25)
         u_quantile = np.quantile(critics, 0.75)
         
-        # critics 값이 1사분위수와 3사분위수 사이에 있는지를 나타내는 불리언 배열을 생성
+        # critics 값이 1사분위수와 3사분위수 사이에 있는지 여부를 나타내는 True, False 배열을 생성
         in_range = np.logical_and(critics >= l_quantile, critics <= u_quantile)
         
         # 1사분위수와 3사분위수 사이에 있는 critics 값의 평균을 계산
         critic_mean = np.mean(critics[in_range])
         
-        # 전체 critics 값의 표준 편차를 계산
+        # critics 값의 전체 표준 편차를 계산
         critic_std = np.std(critics)
-        
-        # critics 값을 표준화하여 z-score를 계산하고, 1을 더해 양수로 변환
+        # (X - 평균) / (표준편차)
+        # critics 값을 표준화하여 z-score의 절댓값을 계산하고, 1을 더해 양수로 변환(값이 0임을 피하기 위해)
         z_scores = np.absolute((np.asarray(critics) - critic_mean) / critic_std) + 1
         
-        # z-score를 pandas Series로 변환하고, smooth_window를 사용해 이동 평균을 계산
+        # z-score를 Series 타입으로 변환하고, smooth_window의 크기만큼의 이동 평균을 계산
+        # center = True : 해당 인덱스를 기준으로 계산. False이면 현재위치 포함 이전 smooth_window-1개만큼을 포함하여 계산
+        # min_periods : smooth_window 크기에 미치지 못하더라도 smooth_window // 2의 크기가 보장된다면 이동 평균을 계산
+        # .values : numpy 배열로 변환
         z_scores = pd.Series(z_scores).rolling(smooth_window, center=True, min_periods=smooth_window // 2).mean().values
         
         # 최종 z-score 배열을 반환
@@ -684,41 +702,34 @@ class Anomaly(object):
         Args:
         y (ndarray): 실제 값.
         y_hat (ndarray): 예측 값. 각 타임스탬프는 여러 예측을 가짐.
-        step_size (int):
-        선택사항. 예측 값의 윈도우 사이의 단계 수를 나타냄.
-        주어지지 않으면 1이 사용됨.
-        score_window (int):
-        선택사항. 점수가 계산되는 윈도우의 크기.
-        주어지지 않으면 10이 사용됨.
-        smoothing_window (float 또는 int):
-        선택사항. 부드럽게 하는 윈도우의 크기. float인 경우 y의 총 길이의 비율로 표현됨.
-        주어지지 않으면 0.01이 사용됨.
-        smooth (bool):
-        선택사항. 반환된 오류가 부드럽게 되어야 하는지 여부를 나타냄.
-        주어지지 않으면 `True`가 사용됨.
-        rec_error_type (str):
-        선택사항. 재구성 오류 유형 ``["point", "area", "dtw"]``.
-        주어지지 않으면 "point"가 사용됨.
+        step_size (int): 선택사항. 예측 값의 윈도우 사이의 단계 수를 나타냄. 주어지지 않으면 1이 사용됨.
+        score_window (int): 선택사항. 점수가 계산되는 윈도우의 크기. 주어지지 않으면 10이 사용됨.
+        smoothing_window (float 또는 int): 선택사항. 부드럽게 하는 윈도우의 크기. float인 경우 y의 총 길이의 비율로 표현됨. 주어지지 않으면 0.01이 사용됨.
+        smooth (bool): 선택사항. 반환된 오류가 부드럽게 되어야 하는지 여부를 나타냄. 주어지지 않으면 `True`가 사용됨.
+        rec_error_type (str): 선택사항. 재구성 오류 유형 ``["point", "area", "dtw"]``. 주어지지 않으면 "point"가 사용됨.
         Returns:
         ndarray: 재구성 오류 배열.
         """
         # smoothing_window가 float인 경우, y의 길이에 비례하여 정수로 변환하고 최대 200으로 제한
+        # smooth 하는데 사용할 윈도우의 크기를 정하는 단계
+        # isinstance : 데이터타입 확인 함수
         if isinstance(smoothing_window, float):
             smoothing_window = min(math.trunc(len(y) * smoothing_window), 200)
         
         true = []  # 실제 값들을 저장할 리스트 초기화
         
-        # y의 첫 번째 요소를 true 리스트에 추가
+        # y의 첫 번째 요소를 순서대로 true 리스트에 추가
         for i in range(len(y)):
             true.append(y[i][0])
         
         # 마지막 윈도우의 내용을 포함하여 true 리스트에 추가
+        # y의 마지막 값의 전체 값을 순서대로 true 리스트에 추가
         for it in range(len(y[-1]) - 1):
             true.append(y[-1][it + 1])
         
-        predictions = []  # 예측 값들을 저장할 리스트 초기화
-        predictions_vs = []  # 예측 값들의 통계 정보를 저장할 리스트 초기화
-        pred_length = y_hat.shape[1]  # y_hat의 두 번째 차원의 길이 저장
+        predictions = []                # 예측 값들을 저장할 리스트 초기화
+        predictions_vs = []             # 예측 값들의 통계 정보를 저장할 리스트 초기화
+        pred_length = y_hat.shape[1]    # y_hat의 두 번째 차원의 길이 저장(예측 길이)
         num_errors = y_hat.shape[1] + step_size * (y_hat.shape[0] - 1)  # 총 오류 수 계산
         
         # 예측 값들을 계산
@@ -729,16 +740,16 @@ class Anomaly(object):
             
             if intermediate:
                 predictions.append(np.average(intermediate, axis=0))  # 중간 예측 값들의 평균을 predictions 리스트에 추가
-                # intermediate 리스트의 통계 정보를 predictions_vs 리스트에 추가
+                # intermediate 리스트의 통계 정보(최소, 최대, 1~3사분위수)를 predictions_vs 리스트에 추가
                 predictions_vs.append([[np.min(np.asarray(intermediate)), 
                                         np.percentile(np.asarray(intermediate), 25), 
                                         np.percentile(np.asarray(intermediate), 50), 
                                         np.percentile(np.asarray(intermediate), 75), 
                                         np.max(np.asarray(intermediate))]])
 
-        true = np.asarray(true)  # true 리스트를 numpy 배열로 변환
-        predictions = np.asarray(predictions)  # predictions 리스트를 numpy 배열로 변환
-        predictions_vs = np.asarray(predictions_vs)  # predictions_vs 리스트를 numpy 배열로 변환
+        true = np.asarray(true)                     # true(실제 값) 리스트를 numpy 배열로 변환
+        predictions = np.asarray(predictions)       # predictions 리스트를 numpy 배열로 변환
+        predictions_vs = np.asarray(predictions_vs) # predictions_vs 리스트를 numpy 배열로 변환
         
         # 재구성 오류 계산
         if rec_error_type.lower() == "point":
@@ -845,7 +856,7 @@ class Anomaly(object):
                 # 1개 이하일 경우 중간 값 저장
                 critic_kde_max.append(np.median(np.asarray(critic_intermediate)))
         
-        # critic 점수 계산(# 11 참고)
+        # critic 점수 계산(# 11 참고) - z-score
         critic_scores = self._compute_critic_score(critic_kde_max, critic_smooth_window)
         
         # 재현 에러 계산(# 16 참고)
