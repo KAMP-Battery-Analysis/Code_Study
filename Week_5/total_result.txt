@@ -1,0 +1,54 @@
+Raw : Accuracy : 0.9843, Precision : 1.0000, Recall : 0.6814, F-score : 0.8105 
+
+win_size(10)
+20 : Accuracy : 0.9575, Precision : 0.5581, Recall : 0.6593, F-score : 0.6045 
+30 : Accuracy : 0.9806, Precision : 1.0000, Recall : 0.6062, F-score : 0.7548 
+40 : Accuracy : 0.9922, Precision : 0.8626, Recall : 1.0000, F-score : 0.9262  
+50 : Accuracy : 0.9841, Precision : 1.0000, Recall : 0.6770, F-score : 0.8074  
+60 : Accuracy : 0.9863, Precision : 1.0000, Recall : 0.7212, F-score : 0.8380
+70 : Accuracy : 0.9771, Precision : 0.7490, Recall : 0.8053, F-score : 0.7761 
+80 : Accuracy : 0.9885, Precision : 1.0000, Recall : 0.7655, F-score : 0.8672 
+90 : Accuracy : 0.9116, Precision : 0.0000, Recall : 0.0000, F-score : 0.0000
+100 : Accuracy : 0.9935, Precision : 0.8828, Recall : 1.0000, F-score : 0.9378  
+
+n_critic(5)
+1 : Accuracy : 0.9891, Precision : 0.8259, Recall : 0.9867, F-score : 0.8992 
+3 : Accuracy : 0.8990, Precision : 0.0000, Recall : 0.0000, F-score : 0.0000
+7 : Accuracy : 0.9804, Precision : 0.7906, Recall : 0.8186, F-score : 0.8043 
+10 : Accuracy : 0.9926, Precision : 0.8692, Recall : 1.0000, F-score : 0.9300 
+
+learning_rate(0.0005)
+0.0001 : Accuracy : 0.9832, Precision : 1.0000, Recall : 0.6593, F-score : 0.7947 
+0.00005 : Accuracy : 0.9924, Precision : 0.8659, Recall : 1.0000, F-score : 0.9281 
+0.00001 :  Accuracy : 0.9806, Precision : 0.8018, Recall : 0.8053, F-score : 0.8035 
+0.000005 : Accuracy : 0.9928, Precision : 0.8726, Recall : 1.0000, F-score : 0.9320 
+0.000001 : Accuracy : 0.9911, Precision : 0.8464, Recall : 1.0000, F-score : 0.9168 
+
+batch_size(64)
+16 : Accuracy : 0.9922, Precision : 0.8626, Recall : 1.0000, F-score : 0.9262 
+32 : Accuracy : 0.9795, Precision : 0.8028, Recall : 0.7743, F-score : 0.7883 
+64 : Accuracy : 0.9314, Precision : 0.3605, Recall : 0.5088, F-score : 0.4220 
+128 : Accuracy : 0.9854, Precision : 0.8565, Recall : 0.8451, F-score : 0.8508
+256 : Accuracy : 0.9850, Precision : 1.0000, Recall : 0.6947, F-score : 0.8198 
+
+epochs(30)
+10 : Accuracy : 0.9813, Precision : 0.8070, Recall : 0.8142, F-score : 0.8106 
+20 : Accuracy : 0.9551, Precision : 0.5331, Recall : 0.7124, F-score : 0.6098
+30 : Accuracy : 0.9360, Precision : 0.3963, Recall : 0.5752, F-score : 0.4693 
+50 : Accuracy : 0.9802, Precision : 0.8082, Recall : 0.7832, F-score : 0.7955 
+100 : Accuracy : 0.9835, Precision : 1.0000, Recall : 0.6637, F-score : 0.7979 
+200 : Accuracy : 0.9915, Precision : 0.8528, Recall : 1.0000, F-score : 0.9206 
+300 : Accuracy : 0.9869, Precision : 1.0000, Recall : 0.7345, F-score : 0.8469
+1000 : Accuracy : 0.9835, Precision : 1.0000, Recall : 0.6637, F-score : 0.7979 
+
+feature(3)
+1 : Accuracy : 0.9815, Precision : 0.7509, Recall : 0.9336, F-score : 0.8323
+2 : Accuracy : 0.9861, Precision : 0.7793, Recall : 1.0000, F-score : 0.8760 
+3 : Accuracy : 0.9667, Precision : 0.6608, Recall : 0.6637, F-score : 0.6623
+4 : Accuracy : 0.9808, Precision : 0.8286, Recall : 0.7699, F-score : 0.7982 
+5 : Accuracy : 0.9734, Precision : 0.7453, Recall : 0.6991, F-score : 0.7215 
+6 : Accuracy : 0.9808, Precision : 1.0000, Recall : 0.6106, F-score : 0.7582 
+7 : Accuracy : 0.9299, Precision : 0.2895, Recall : 0.2920, F-score : 0.2907
+8 : Accuracy : 0.9919, Precision : 0.8593, Recall : 1.0000, F-score : 0.9243 
+9 : Accuracy : 0.9691, Precision : 0.6141, Recall : 1.0000, F-score : 0.7609 
+10 : Accuracy : 0.9567, Precision : 0.5513, Recall : 0.6416, F-score : 0.5930 
