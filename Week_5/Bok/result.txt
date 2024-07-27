@@ -1,0 +1,14 @@
+Batch_size
+256 : Accuracy : 0.9856, Precision : 1.0000, Recall : 0.7080, F-score : 0.8290 
+128 : Accuracy : 0.9863, Precision : 1.0000, Recall : 0.7212, F-score : 0.8380 
+64 :  Accuracy : 0.9848, Precision : 1.0000, Recall : 0.6903, F-score : 0.8168 
+32 : Accuracy : 0.9608, Precision : 0.5752, Recall : 0.7788, F-score : 0.6617 
+16 : Accuracy : 0.9099, Precision : 0.0000, Recall : 0.0000, F-score : 0.0000
+features
+10 : Accuracy : 0.9761, Precision : 0.7479, Recall : 0.7743, F-score : 0.7609 
+9 : Accuracy : 0.9895, Precision : 1.0000, Recall : 0.7876, F-score : 0.8812 
+8 : Accuracy : 0.9264, Precision : 0.3121, Recall : 0.4115, F-score : 0.3550 
+7 : Accuracy : 0.9447, Precision : 0.4586, Recall : 0.6858, F-score : 0.5496 
+6 : Accuracy : 0.9845, Precision : 1.0000, Recall : 0.6858, F-score : 0.8136 
+5 : Accuracy : 0.9804, Precision : 1.0000, Recall : 0.6018, F-score : 0.7514 
+4 : Accuracy : 0.9867, Precision : 0.7895, Recall : 0.9956, F-score : 0.8806 
