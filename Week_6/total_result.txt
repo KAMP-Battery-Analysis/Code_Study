@@ -1,0 +1,22 @@
+Raw : Accuracy : 0.9843, Precision : 1.0000, Recall : 0.6814, F-score : 0.8105 
+
+win_size(10)
+
+
+n_critic(5)
+1 : Accuracy : 0.9787, Precision : 0.7783, Recall : 0.7920, F-score : 0.7851
+3 : Accuracy : 0.9856, Precision : 1.0000, Recall : 0.7080, F-score : 0.8290
+5 : Accuracy : 0.9911, Precision : 0.8464, Recall : 1.0000, F-score : 0.9168
+
+
+learning_rate(0.0005)
+
+
+batch_size(64)
+ 
+
+epochs(30)
+
+
+feature(3)
+ 
