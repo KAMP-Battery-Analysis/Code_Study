@@ -21,7 +21,7 @@
 |복현우|내용 기입|내용 기입|
 |박준영|내용 기입|내용 기입|
 
-![alt text](/Week_6/img/image.png)
+![alt text](./img/img1.JPG)
 
 #### 2. features
 
@@ -30,7 +30,7 @@
 |복현우|내용 기입|내용 기입|
 |박준영|내용 기입|내용 기입|
 
-![alt text](/Week_6/img/image-1.png)
+![alt text](./img/img2.JPG)
 
 #### 3. n_critic
 
@@ -39,7 +39,7 @@
 |복현우|내용 기입|내용 기입|
 |박준영|내용 기입|내용 기입|
 
-![alt text](/Week_6/img/image-2.png)
+![alt text](./img/img3.JPG)
 
 #### 4. window_Size
 
@@ -48,4 +48,4 @@
 |복현우|내용 기입|내용 기입|
 |박준영|내용 기입|내용 기입|
 
-![alt text](/Week_6/img/image-3.png)
+![alt text](./img/img4.JPG)
