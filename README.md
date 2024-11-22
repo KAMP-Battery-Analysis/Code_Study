@@ -21,4 +21,3 @@
 | Week 5 <br/> (24.07.12. 금)    | AI 딥러닝 하이퍼파라미터 튜닝 - 1주차 (window_size, features, epochs, batch_size, n_critic, learning_rate) | [튜닝 결과 중간 분석](https://github.com/KAMP-Battery-Analysis/Code_Study/blob/main/Week_5/README.md) |
 | Week 6 <br/> (24.07.20. 토)    | AI 딥러닝 하이퍼파라미터 튜닝 - 2주차 (window_size, features, epochs, batch_size, n_critic, learning_rate) | [튜닝 결과 중간 분석](https://github.com/KAMP-Battery-Analysis/Code_Study/blob/main/Week_5/README.md) (+ 2주차 결과 갱신) |
 | Week 7 <br/> (24.08.26. 월)    | AI 딥러닝 하이퍼파라미터 튜닝 - 3주차 (window_size, features, batch_size, n_critic) | [튜닝 결과 중간 분석](https://github.com/KAMP-Battery-Analysis/Code_Study/blob/main/Week_6/README.md) (+3주차 결과 갱신) <br/> [중간 회의록 갱신](https://github.com/KAMP-Battery-Analysis/Code_Study/blob/main/Week_6/중간회의록.md) |
-| Week 8 <br/> (24.08.03. 토)    | AI 딥러닝 하이퍼파라미터 튜닝 - 4주차 | - |
